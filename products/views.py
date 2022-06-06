@@ -2,6 +2,18 @@ from itertools import product
 from webbrowser import get
 from django.shortcuts import render, get_object_or_404
 from .models import Product
+from .forms import ProductModelForm
+
+
+def create_view(request):
+    form = ProductModelForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.sale_price = instance.price
+        instance.save()
+    template = "create_view.html"
+    context = {"form": form}
+    return render(request, template, context)
 
 
 def detail_view(request, slug):
