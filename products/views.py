@@ -34,3 +34,19 @@ def list_view(request):
 		"queryset": queryset
 	}
 	return render(request, template, context)
+
+
+def edit_view(request, slug=None):
+    product = get_object_or_404(Product, slug=slug)
+    print(product)
+    form = ProductModelForm(request.POST or None, instance=product)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        #instance.sale_price = instance.price
+        instance.save()
+    template = "update_view.html"
+    context = {
+		"object": product,
+		"form": form
+	}
+    return render(request, template, context)
