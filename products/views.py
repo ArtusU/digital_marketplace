@@ -5,14 +5,14 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from .models import Product
 from .forms import ProductModelForm
-
+from digitalmarketplace.mixins import MultipleSlugMixin
 
 
 class ProductListView(ListView):
     model = Product
     
 
-class ProductDetailView(DetailView):
+class ProductDetailView(MultipleSlugMixin, DetailView):
     model = Product 
      
 
