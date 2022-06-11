@@ -1,9 +1,20 @@
 from itertools import product
 from webbrowser import get
 from django.shortcuts import render, get_object_or_404
+from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 from .models import Product
 from .forms import ProductModelForm
 
+
+
+class ProductListView(ListView):
+    model = Product
+    
+
+class ProductDetailView(DetailView):
+    model = Product 
+     
 
 def create_view(request):
     form = ProductModelForm(request.POST or None)
@@ -17,26 +28,6 @@ def create_view(request):
         "submit_btn": "Create Product"
         }
     return render(request, template, context)
-
-
-def detail_view(request, slug):
-	try:
-		product = get_object_or_404(Product, slug=slug)
-	except Product.MultipleObjectsReturned:
-		product = Product.objects.filter(slug=slug).order_by("-title").first()
-		
-	template = 'detail_view.html'
-	context = {"object": product}
-	return render(request, template, context)
-
-
-def list_view(request):
-	queryset = Product.objects.all()
-	template = "list_view.html"
-	context = {
-		"queryset": queryset
-	}
-	return render(request, template, context)
 
 
 def edit_view(request, slug=None):
