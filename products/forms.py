@@ -13,7 +13,7 @@ class ProductModelForm(forms.ModelForm):
     
     class Meta:
         model = Product
-        fields = ['title', 'description', 'price']
+        fields = ['user', 'managers', 'title', 'description', 'price']
         widgets = {
             'description': forms.Textarea(
                 attrs={'placeholder': 'New Description'}
