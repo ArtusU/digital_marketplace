@@ -8,6 +8,7 @@ from django.db.models.signals import pre_save
 
 class Product(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	managers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="managers_products", blank=True)
 	title = models.CharField(max_length=30)
 	slug = models.SlugField(blank=True, unique=True)
 	description = models.TextField()
