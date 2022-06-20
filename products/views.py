@@ -2,6 +2,7 @@ from itertools import product
 from webbrowser import get
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -27,7 +28,6 @@ class ProductCreateView(LoginRequiredMixin, MultipleSlugMixin, SubmitBtnMixin, C
     model = Product
     template_name = "form.html"
     form_class = ProductModelForm
-    success_url = "/products/create/"
     submit_btn = 'Add Product'
     
     def form_valid(self, form):
@@ -37,10 +37,12 @@ class ProductCreateView(LoginRequiredMixin, MultipleSlugMixin, SubmitBtnMixin, C
         form.instance.managers.add(user)
         return valid_data
     
+    def get_success_url(self):
+        return reverse('products:list')
+    
 
 class ProductUpdateView(ProductManagerMixin, MultipleSlugMixin, SubmitBtnMixin, UpdateView):
     model = Product
     template_name = "form.html"
     form_class = ProductModelForm
-    success_url = "/products/"
     submit_btn = 'Update Product'
