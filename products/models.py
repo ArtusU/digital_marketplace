@@ -29,6 +29,9 @@ class Product(models.Model):
 
 	def get_absolute_url(self):
 		return reverse("products:detail", kwargs={"slug": self.slug})
+
+	def get_download(self):
+		return reverse("products:download", kwargs={"slug": self.slug})
 	
 
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
