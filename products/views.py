@@ -1,6 +1,11 @@
-from itertools import product
+import os
+from io import StringIO
+from mimetypes import guess_type
 from webbrowser import get
-from django.http import Http404
+from wsgiref.util import FileWrapper
+from django.conf import settings
+from django.core.files import File
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.generic.detail import DetailView
@@ -22,6 +27,24 @@ class ProductListView(ListView):
 
 class ProductDetailView(MultipleSlugMixin, DetailView):
     model = Product 
+    
+    
+class ProductDownloadView(MultipleSlugMixin, DetailView):
+    model = Product
+    
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        filepath = os.path.join(settings.PROTECTED_ROOT, obj.media.path)
+        guessed_type = guess_type(filepath)[0]
+        wrapper = FileWrapper(StringIO(filepath))
+        mimetype = 'application/force-download'
+        if guessed_type:
+            mimetype = guessed_type
+        response = HttpResponse(wrapper, content_type=mimetype)
+        if not request.GET.get("preview"):
+            response["Content-Disposition"] = f"attachment; filename={obj.media.name}"
+        response["X-Sendfile"] = obj.media.name
+        return response
     
     
 class ProductCreateView(LoginRequiredMixin, MultipleSlugMixin, SubmitBtnMixin, CreateView):

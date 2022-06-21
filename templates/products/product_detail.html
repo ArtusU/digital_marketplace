@@ -11,6 +11,18 @@
     {% else %}
     <p class="card-text">Price: £{{ object.price }}</p>
     {% endif %}
+    {% if object.media %}
+    <p class="card-text">
+      <a href='{{ object.get_download }}?preview=True'><small class="text-muted">Preview</small>
+    </p></a>
+    <p class="card-text">
+      <a href='{{ object.get_download }}'><small class="text-muted">Download Here</small>
+    </p></a>
+    {% else %}
+    <p class="card-text">
+      <small class="text-muted">Nothing to download</small>
+    </p>
+    {% endif %}
     <p class="card-text">
       <small class="text-muted">Last updated 3 mins ago</small>
     </p>
