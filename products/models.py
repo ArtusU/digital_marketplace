@@ -1,4 +1,6 @@
+from statistics import mode
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 import random
 import string
 from django.db import models
@@ -7,9 +9,15 @@ from django.utils.text import slugify
 from django.db.models.signals import pre_save
 
 
+
+def download_media_location(instance, filename):
+    return "%s/%s" %(instance.id, filename)
+
+
 class Product(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	managers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="managers_products", blank=True)
+	media = models.FileField(blank=True, null=True, upload_to=download_media_location, storage=FileSystemStorage(location=settings.PROTECTED_ROOT))
 	title = models.CharField(max_length=30)
 	slug = models.SlugField(blank=True, unique=True)
 	description = models.TextField()
