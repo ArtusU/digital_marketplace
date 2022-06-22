@@ -55,3 +55,16 @@ def product_pre_save_receiver(sender, instance, *args, **kwargs):
 		
 pre_save.connect(product_pre_save_receiver, sender=Product)
 
+
+class MyProducts(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Product, blank=True)
+    
+    
+    def __unicode__(self):
+        return "%s" %(self.products.count())
+    
+    class Meta:
+        verbose_name = "My Products"
+        verbose_name_plural = "My Products"
+

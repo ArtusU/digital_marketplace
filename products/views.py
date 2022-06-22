@@ -34,17 +34,20 @@ class ProductDownloadView(MultipleSlugMixin, DetailView):
     
     def get(self, request, *args, **kwargs):
         obj = self.get_object()
-        filepath = os.path.join(settings.PROTECTED_ROOT, obj.media.path)
-        guessed_type = guess_type(filepath)[0]
-        wrapper = FileWrapper(StringIO(filepath))
-        mimetype = 'application/force-download'
-        if guessed_type:
-            mimetype = guessed_type
-        response = HttpResponse(wrapper, content_type=mimetype)
-        if not request.GET.get("preview"):
-            response["Content-Disposition"] = f"attachment; filename={obj.media.name}"
-        response["X-Sendfile"] = obj.media.name
-        return response
+        if request.user.myproducts.products.all:
+            filepath = os.path.join(settings.PROTECTED_ROOT, obj.media.path)
+            guessed_type = guess_type(filepath)[0]
+            wrapper = FileWrapper(StringIO(filepath))
+            mimetype = 'application/force-download'
+            if guessed_type:
+                mimetype = guessed_type
+            response = HttpResponse(wrapper, content_type=mimetype)
+            if not request.GET.get("preview"):
+                response["Content-Disposition"] = f"attachment; filename={obj.media.name}"
+            response["X-Sendfile"] = obj.media.name
+            return response
+        else:
+            raise Http404
     
     
 class ProductCreateView(LoginRequiredMixin, MultipleSlugMixin, SubmitBtnMixin, CreateView):
