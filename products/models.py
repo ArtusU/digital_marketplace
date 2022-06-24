@@ -30,6 +30,9 @@ class Product(models.Model):
 	def get_absolute_url(self):
 		return reverse("products:detail", kwargs={"slug": self.slug})
 
+	def get_update_url(self):
+		return reverse("products:update", kwargs={"slug": self.slug})
+
 	def get_download(self):
 		return reverse("products:download", kwargs={"slug": self.slug})
 	

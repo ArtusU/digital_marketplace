@@ -12,6 +12,7 @@
     <p class="card-text">Price: £{{ object.price }}</p>
     {% endif %}
     {% if request.user.is_authenticated and object.media %}
+    <a href="{{ object.get_update_url }}" class="btn btn-sm btn-secondary" role="button" aria-pressed="true">Edit</a>
     {% if object in request.user.myproducts.products.all %}
     <p class="card-text">
       <a href='{{ object.get_download }}?preview=True'><small class="text-muted">Preview</small>
