@@ -3,6 +3,7 @@ from io import StringIO
 from mimetypes import guess_type
 from webbrowser import get
 from wsgiref.util import FileWrapper
+from django.db.models import Q
 from django.conf import settings
 from django.core.files import File
 from django.http import Http404, HttpResponse
@@ -23,6 +24,16 @@ from digitalmarketplace.mixins import (
 
 class ProductListView(ListView):
     model = Product
+    
+    def get_queryset(self, *args, **kwargs):
+        qs = super(ProductListView, self).get_queryset(*args, **kwargs)
+        query = self.request.GET.get('q', None)
+        if query is not None:
+            qs = qs.filter(Q(title__icontains=query)|
+                        Q(description__icontains=query)
+                        ).order_by('title')
+            return qs
+        return qs
     
 
 class ProductDetailView(MultipleSlugMixin, DetailView):
