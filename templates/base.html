@@ -63,10 +63,12 @@
               <a class="nav-link disabled">Disabled</a>
             </li>
           </ul>
-          <form class="d-flex" role="search">
+          <form method="GET" action="" class="d-flex" role="search">
             <input
               class="form-control me-2"
-              type="search"
+              type="text"
+              name="q"
+              value="{{ request.GET.q }}"
               placeholder="Search"
               aria-label="Search"
             />
