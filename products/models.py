@@ -9,9 +9,8 @@ from django.utils.text import slugify
 from django.db.models.signals import pre_save
 
 
-
 def download_media_location(instance, filename):
-    return "%s/%s" %(instance.id, filename)
+	return "%s/%s" %(instance.slug, filename)
 
 
 class Product(models.Model):
@@ -59,15 +58,35 @@ def product_pre_save_receiver(sender, instance, *args, **kwargs):
 pre_save.connect(product_pre_save_receiver, sender=Product)
 
 
+def thumbnail_location(instance, filename):
+	return "%s/%s" %(instance.product.slug, filename)
+
+class Thumbnail(models.Model):
+	product = models.ForeignKey(Product, on_delete=models.CASCADE)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	height = models.CharField(max_length=20, null=True, blank=True )
+	width = models.CharField(max_length=20, null=True, blank=True )
+	media = models.ImageField(
+		width_field = "width", 
+  		height_field = "height", 
+		blank=True, 
+  		null=True, 
+	 	upload_to=thumbnail_location
+	   	)
+
+	def __str__(self):
+		return str(self.media.path)
+	 
+
 class MyProducts(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product, blank=True)
-    
-    
-    def __unicode__(self):
-        return "%s" %(self.products.count())
-    
-    class Meta:
-        verbose_name = "My Products"
-        verbose_name_plural = "My Products"
+	user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	products = models.ManyToManyField(Product, blank=True)
+	
+	
+	def __str__(self):
+		return "%s" %(self.products.count())
+	
+	class Meta:
+		verbose_name = "My Products"
+		verbose_name_plural = "My Products"
 
