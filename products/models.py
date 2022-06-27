@@ -97,7 +97,7 @@ def create_new_thumb(media_path, instance, owner_slug, max_length, max_width):
 		filename = os.path.basename(media_path)
 		thumb = Image.open(media_path)
 		size = (max_length, max_width)
-		thumb.thumbnail(size, Image.ANTIALIAS)
+		thumb.thumbnail(size, Image.LANCZOS)
 		temp_loc = "%s/%s/tmp" %(settings.MEDIA_ROOT, owner_slug)
 		if not os.path.exists(temp_loc):
 			os.makedirs(temp_loc)
