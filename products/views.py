@@ -15,6 +15,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from .mixins import ProductManagerMixin
 from .models import Product
 from .forms import ProductModelForm
+from tags.models import Tag
 from digitalmarketplace.mixins import (
     MultipleSlugMixin, 
     SubmitBtnMixin,
@@ -72,6 +73,13 @@ class ProductCreateView(LoginRequiredMixin, MultipleSlugMixin, SubmitBtnMixin, C
         form.instance.user = user
         valid_data = super(ProductCreateView, self).form_valid(form)
         form.instance.managers.add(user)
+        tags = form.cleaned_data.get('tags')
+        if tags:
+            tag_list = tags.split(',')
+            for tag in tag_list:
+                if not tag == " ":
+                    new_tag = Tag.objects.get_or_create(title=str(tag).strip())[0]
+                    new_tag.products.add(form.instance)
         return valid_data
     
     def get_success_url(self):
@@ -83,3 +91,23 @@ class ProductUpdateView(ProductManagerMixin, MultipleSlugMixin, SubmitBtnMixin, 
     template_name = "form.html"
     form_class = ProductModelForm
     submit_btn = 'Update Product'
+    
+    def get_initial(self):
+        initial = super(ProductUpdateView, self).get_initial()
+        tags = self.get_object().tag_set.all()
+        initial['tags'] = ", ".join([x.title for x in tags])
+        return initial
+    
+    def form_valid(self, form):
+        valid_data = super(ProductUpdateView, self).form_valid(form)
+        tags = form.cleaned_data.get('tags')
+        obj.tag_set.clear()
+        if tags:
+            tag_list = tags.split(',')
+            obj = self.get_object()
+            obj.tag_set.clear()
+            for tag in tag_list:
+                if not tag == " ":
+                    new_tag = Tag.objects.get_or_create(title=str(tag).strip())[0]
+                    new_tag.products.add(self.get_object())
+        return valid_data

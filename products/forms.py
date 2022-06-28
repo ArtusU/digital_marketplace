@@ -9,6 +9,7 @@ PUBLISH_CHOICES = {
 }
         
 class ProductModelForm(forms.ModelForm):
+    tags = forms.CharField(label='Related Tags', required=False)
     publish = forms.ChoiceField(widget=forms.RadioSelect, choices=PUBLISH_CHOICES, required=False)
     
     class Meta:
