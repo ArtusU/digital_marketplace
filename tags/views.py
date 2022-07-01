@@ -12,12 +12,7 @@ class TagDetailView(DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super(TagDetailView, self).get_context_data(*args, **kwargs)
         if self.request.user.is_authenticated:
-            analytic_obj, created = TagView.objects.get_or_create(
-                                        user=self.request.user, 
-                                        tag=self.get_object()
-                                        )
-            analytic_obj.count += 1
-            analytic_obj.save()
+            TagView.objects.add_count(user=self.request.user, tag=self.get_object())
         return context
     
 
