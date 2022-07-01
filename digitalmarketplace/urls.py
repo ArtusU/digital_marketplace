@@ -3,11 +3,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from dashboard.views import DashboardView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    path('', include('products.urls', namespace='products')),
+    path('', DashboardView.as_view(), name='dashboard'),
+    path('products/', include('products.urls', namespace='products')),
     path('tags/', include('tags.urls', namespace='tags')),
 ]
 

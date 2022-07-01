@@ -21,4 +21,4 @@ class TagView(models.Model):
     objects = TagViewManager()
     
     def __str__(self):
-        return str(self.tag.title)
+        return f"{self.tag.title}-{self.count}"
