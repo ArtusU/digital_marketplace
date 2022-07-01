@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     
     'products',
     'tags',
+    'analytics',
 ]
 
 MIDDLEWARE = [

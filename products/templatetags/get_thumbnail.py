@@ -15,5 +15,7 @@ def get_thumbnail(obj, arg):
         raise TypeError("This is not valid product model.")
     if not choices.get(arg):
         raise TypeError("This is not valid type of this model.") 
-       
-    return obj.thumbnail_set.filter(type=arg).first().media.url
+    try:
+        return obj.thumbnail_set.filter(type=arg).first().media.url
+    except:
+        return None
