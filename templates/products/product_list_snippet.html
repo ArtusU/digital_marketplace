@@ -1,0 +1,36 @@
+{% load get_thumbnail %}
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+	{% for product in product_list %}
+	<div class="col">
+		<div class="card shadow-sm">
+			{% if product|get_thumbnail:'micro' %}
+			<img
+				src="{{ product|get_thumbnail:'micro' }}"
+				class="card-img-top"
+				alt="..."
+			/>
+			{% endif %}
+			<div class="card-body">
+				<h3 class="card-text">{{ product.title }}</h3>
+				<p class="card-text">{{ product.description | truncatechars:100 }}</p>
+				<p class="card-text">Price: £{{ product.price }}</p>
+				<div class="d-flex justify-content-between align-items-center">
+					<div class="btn-group">
+            {% if product.user.is_authenticated %}
+						<a
+            href="{{ product.get_absolute_url }}"
+            class="btn btn-sm btn-primary"
+            role="button"
+            aria-pressed="true"
+            >View</a
+						>
+            {% endif %}
+					</div>
+					<small class="text-muted">9 mins</small>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>

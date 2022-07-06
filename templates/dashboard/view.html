@@ -1,12 +1,16 @@
-{% extends 'base.html' %} {% load get_thumbnail %} {% block content %}
-<div class="row row-cols-1">
-	<div class="col">
-		<div class="card shadow-sm">
-			<div class="card-body">
-				<h3 class="card-text">{{ products }}</h3>
-				<h3 class="card-text">{{ top_tags }}</h3>
-			</div>
-		</div>
-	</div>
+{% extends "base.html" %}
+
+{% block content %}
+
+<div>
+	<h1>Suggested Products</h1>
+{% include "products/product_list_snippet.html" with product_list=products %}
+
+</div>
+<div>
+	<h1>Tops Tags</h1>
+{% for tag in top_tags %}
+<li><a href="{{ tag.get_absolute_url }}">{{ tag }}</a></li>
+{% endfor %}
 </div>
 {% endblock content %}

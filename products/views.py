@@ -42,11 +42,11 @@ class ProductDetailView(MultipleSlugMixin, DetailView):
     model = Product 
     
     def get_context_data(self, *args, **kwargs):
-        context = super(ProductDetailView, self).get_context_data(*args, **kwargs)#
+        context = super(ProductDetailView, self).get_context_data(*args, **kwargs)
         obj = self.get_object()
         tags = obj.tag_set.all()
         for tag in tags:
-            TagView.objects.add_count(user=self.request.user, tag=tag)
+            new_view = TagView.objects.add_count(self.request.user, tag)
         return context
     
     
