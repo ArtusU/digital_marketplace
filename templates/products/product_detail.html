@@ -22,16 +22,47 @@
       <p class="card-text">
         <a href='{{ object.get_download }}'><small class="text-muted">Download Here</small>
         </p></a>
+        <!-- Button trigger modal -->
+        <button id="purchase-btn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Purchase
+        </button>
         {% else %}
         <p class="card-text">
           <small class="text-muted">Nothing to download</small>
         </p>
     {% endif %}
     {% endif %}
-    <p class="card-text">
-      <small class="text-muted">Last updated 3 mins ago</small>
-    </p>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Would you like to purchase the product?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            By clicking "Confirm" you are purchasing the product and your account will be automatically charged.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="confirm-btn" type="button" class="btn btn-primary">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
+
+<script>
+  var confirmButton = document.getElementById("confirm-btn");
+  confirmButton.addEventListener("click", function () {
+    console.log("click")
+
+  })
+
+
+
+</script>
 
 {% endblock content %}
