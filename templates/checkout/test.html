@@ -1,0 +1,33 @@
+{% extends "base.html" %} 
+
+{% block content %} 
+
+{% csrf_token %}
+
+<a id="test-call" href="#"><h1>TEST</h1></a>
+<div class="content"></div>
+
+
+<script>
+    
+    var el = document.querySelector(".content");
+    
+	var testButton = document.getElementById("test-call");
+	testButton.addEventListener("click", (event) => {
+        console.log("csrftoken");
+		fetch("{% url 'test'  %}", {
+			method: "POST",
+            headers: { "X-Requested-With": "XMLHttpRequest" },
+			data: JSON.stringify({
+                testData: "Hello, New data!",
+				csrfmiddlewaretoken: "{{ csrf_token }}",
+			}),
+		})
+        .then(console.log(data))
+        .then((res) => alert("Form Submitted"))
+			.catch((errors) => console.log(errors));
+        });
+        
+    </script>
+
+{% endblock content %}
