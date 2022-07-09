@@ -1,33 +1,50 @@
-{% extends "base.html" %} 
-
-{% block content %} 
-
-{% csrf_token %}
+{% extends "base.html" %} {% block content %} {% csrf_token %}
 
 <a id="test-call" href="#"><h1>TEST</h1></a>
 <div class="content"></div>
 
-
 <script>
-    
-    var el = document.querySelector(".content");
-    
+	var user = "{{request.user}}";
+
+	function getToken(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== "") {
+			var cookies = document.cookie.split(";");
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = cookies[i].trim();
+				// Does this cookie string begin with the name we want?
+				if (cookie.substring(0, name.length + 1) === name + "=") {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}
+
+	var csrf_token = getToken("csrftoken");
+
+	var el = document.querySelector(".content");
+
 	var testButton = document.getElementById("test-call");
 	testButton.addEventListener("click", (event) => {
-        console.log("csrftoken");
+		console.log("csrftoken");
+
 		fetch("{% url 'test'  %}", {
 			method: "POST",
-            headers: { "X-Requested-With": "XMLHttpRequest" },
-			data: JSON.stringify({
-                testData: "Hello, New data!",
+			headers: {
+				"Content-Type": "application/json",
+				"X-CSRFToken": csrf_token,
+			},
+			body: JSON.stringify({
+				testData: "Hello, New data!",
 				csrfmiddlewaretoken: "{{ csrf_token }}",
 			}),
 		})
-        .then(console.log(data))
-        .then((res) => alert("Form Submitted"))
-			.catch((errors) => console.log(errors));
-        });
-        
-    </script>
+		.then(console.log(data))
+		.then((res) => alert("Form Submitted"))
+		.catch((errors) => console.log(errors));
+	});
+</script>
 
 {% endblock content %}
