@@ -15,7 +15,7 @@
     {% endif %}
     {% if request.user.is_authenticated and object.media %}
     <a href="{{ object.get_update_url }}" class="btn btn-sm btn-secondary" role="button" aria-pressed="true">Edit</a>
-    {% if object in request.user.myproducts.products.all %}
+    {% if object not in request.user.myproducts.products.all %}
     <p class="card-text">
       <a href='{{ object.get_download }}?preview=True'><small class="text-muted">Preview</small>
       </p></a>
@@ -55,9 +55,33 @@
 </div>
 
 <script>
+  var user = '{{request.user}}'
   var confirmButton = document.getElementById("confirm-btn");
   confirmButton.addEventListener("click", function () {
     console.log("click")
+    var productId = '{{ object.id }}'
+    console.log('productId:', productId)
+    console.log('USER:', user)
+    console.log("csrftoken");
+		fetch("{% url 'checkout'  %}", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"X-CSRFToken": csrf_token,
+			},
+			body: JSON.stringify({
+				productId: productId,
+			}),
+		})
+		.then(console.log(data))
+		.then((res) => alert("Form Submitted"))
+		.catch((errors) => console.log(errors));
+    if (user == 'AnonymousUser'){  
+        addCookieItem(productId)
+    }else{
+        updateUserOrder(productId)
+        }
+
 
   })
 

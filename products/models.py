@@ -146,7 +146,7 @@ class MyProducts(models.Model):
 	
 	
 	def __str__(self):
-		return "%s" %(self.products.count())
+		return f"{self.products.count()} - {self.user.username}"
 	
 	class Meta:
 		verbose_name = "My Products"
