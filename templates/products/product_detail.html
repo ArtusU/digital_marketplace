@@ -14,8 +14,8 @@
     <p class="card-text">Price: £{{ object.price }}</p>
     {% endif %}
     {% if request.user.is_authenticated and object.media %}
+    {% if object in request.user.myproducts.products.all %}
     <a href="{{ object.get_update_url }}" class="btn btn-sm btn-secondary" role="button" aria-pressed="true">Edit</a>
-    {% if object not in request.user.myproducts.products.all %}
     <p class="card-text">
       <a href='{{ object.get_download }}?preview=True'><small class="text-muted">Preview</small>
       </p></a>
@@ -23,15 +23,16 @@
         <a href='{{ object.get_download }}'><small class="text-muted">Download Here</small>
         </p></a>
         <!-- Button trigger modal -->
+        {% else %}
         <button id="purchase-btn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Purchase
         </button>
-        {% else %}
         <p class="card-text">
           <small class="text-muted">Nothing to download</small>
         </p>
     {% endif %}
     {% endif %}
+    <div id="temp"></div>
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -73,16 +74,19 @@
 				productId: productId,
 			}),
 		})
-		.then(console.log(data))
-		.then((res) => alert("Form Submitted"))
+    .then(response => {
+      return response.json()
+    })
+    .then(data => {
+      confirmButton.remove();
+      downloadDiv = document.createElement("div");
+      downloadDiv.classList.add("download");
+      downloadDiv.innerHTML = "<p><a href='" + data.download + "'>Download</p><p><a href='" + data.preview + "'>Preview</p>";
+      const temp = document.getElementById("temp");
+      temp.insertBefore(downloadDiv, temp.childNodes[0]);
+      form.reset();
+    })
 		.catch((errors) => console.log(errors));
-    if (user == 'AnonymousUser'){  
-        addCookieItem(productId)
-    }else{
-        updateUserOrder(productId)
-        }
-
-
   })
 
 
