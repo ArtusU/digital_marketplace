@@ -10,6 +10,7 @@ from dashboard.views import DashboardView
 urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('', DashboardView.as_view(), name='dashboard'),
+	path('seller', include('sellers.urls', namespace='seller')),
 	path('test/', CheckoutTestView.as_view(), name='test'),
 	path('checkout/', CheckoutView.as_view(), name='checkout'),
 	path('products/', include('products.urls', namespace='products')),
